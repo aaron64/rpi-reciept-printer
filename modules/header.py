@@ -9,7 +9,7 @@ def get_day_with_suffix(day):
     return f"{day}{suffix}"
 
 class ModuleHeader:
-    def __init__(self):
+    def __init__(self, config):
         pass
 
     def reciept_print(self, p):
@@ -17,5 +17,3 @@ class ModuleHeader:
         p.set(bold=True, double_width=True, double_height=True)
         p.text(f"{today.strftime('%B')} {get_day_with_suffix(today.day)} {today.year}\n\n")
         p.set_with_default()
-        p.text("="*42)
-        p.text("\n")

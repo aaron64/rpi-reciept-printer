@@ -2,6 +2,8 @@ import requests
 import json
 from datetime import datetime, timezone
 
+from reciept_util import filter_emojis 
+
 API_GET_PROJECTS_URL = "https://api.ticktick.com/open/v1/project"
 API_GET_TASKS_URL = "https://api.ticktick.com/open/v1/project/{}/data"
 
@@ -19,6 +21,8 @@ TASK_PROJECTS = {
         'tasks': []
     }   
 }
+
+reschedule_tasks = []
 
 
 class ModuleTickTick:
@@ -73,9 +77,18 @@ class ModuleTickTick:
                     if 'dueDate' not in task_json:
                         continue
                     due_date = datetime.strptime(task_json['dueDate'], "%Y-%m-%dT%H:%M:%S.%f%z")
-                    if due_date.date() == now.date():
-                        print(f"Task {task_json['title']} is due today")
-                        task_project['tasks'].append(task_json['title'])
+                    delta_days = (due_date.date() - now.date()).days
+                    if delta_days >= -3 and delta_days <= 0:
+                        print(f"Task {task_json['title']} is due {delta_days} days")
+                        task_project['tasks'].append({
+                            'name': filter_emojis(task_json['title']),
+                            'due': delta_days
+                        })
+                    elif delta_days > -3:
+                        reschedule_tasks.append({
+                            'name': filter_emojis(task_json['title']),
+                            'due': delta_days
+                        })
                 return True
         except requests.exceptions.RequestException as e:
             print(f"Network error fetching project: {e}")
@@ -91,5 +104,13 @@ class ModuleTickTick:
 
             p.text(f"{project_name}:\n")
             for task in task_project['tasks']:
-                p.text(f"\t[ ] {task}\n")
+                if task['due'] < 0:
+                    due_str = f"{task['due']} day" if task['due'] == -1 else f"{task['due']} days"
+                    p.text(f"\t[ ] ({due_str}) {task['name']}\n")
+                else:
+                    p.text(f"\t[ ] {task['name']}\n")
+        if reschedule_tasks:
+            p.text("Reschedule tasks:\n")
+            for reschedule_task in reschedule_tasks:
+                p.text(f"\t- ({reschedule_task['due']} days) {reschedule_task['name']}\n")
 
