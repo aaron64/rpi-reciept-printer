@@ -5,6 +5,7 @@ import configparser
 from modules.header import ModuleHeader
 from modules.ticktick import ModuleTickTick
 
+CHAR_WIDTH = 42
 
 
 modules = []
@@ -62,11 +63,13 @@ class RecieptPrinter:
                   double_width, double_height, custom_size)
     
 
-    def text(self, string):
+    def text(self, string, wrap=False):
+        if not wrap and len(string) > CHAR_WIDTH:
+            string = string[:CHAR_WIDTH]
         if not self.dry:
-            self.p.text(string)
+            self.p.text(f"{string}\n")
         else:
-            print(f"Printing {string}...")
+            print(string)
 
     def cut(self):
         if not self.dry:

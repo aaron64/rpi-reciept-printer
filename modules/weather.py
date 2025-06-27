@@ -54,11 +54,10 @@ class ModuleWeather:
         self.day_weather_code = day_json['weather_code'][0]
 
     def reciept_print(self, p):
-        p.text(f"{self.day_temp_max}°F/{self.day_temp_min}°F ")
+        weather_string = f"{self.day_temp_max}°F/{self.day_temp_min}°F "
         if self.day_weather_code in WMO_CODE:
-            p.text(f"{WMO_CODE[self.day_weather_code]}")
+            weather_string += f"{WMO_CODE[self.day_weather_code]}"
         else:
             p.text(f"Unknown WMO code: {self.day_weather_code}")
-        p.text("\n")
-        p.text("-"*42)
-        p.text("\n")
+            return
+        p.text(weather_string)

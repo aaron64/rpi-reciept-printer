@@ -15,5 +15,5 @@ class ModuleHeader:
     def reciept_print(self, p):
         today = datetime.today()
         p.set(bold=True, double_width=True, double_height=True)
-        p.text(f"{today.strftime('%B')} {get_day_with_suffix(today.day)} {today.year}\n\n")
+        p.text(f"{today.strftime('%B')} {get_day_with_suffix(today.day)} {today.year}\n")
         p.set_with_default()
