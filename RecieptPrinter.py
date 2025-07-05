@@ -68,11 +68,9 @@ class RecieptPrinter:
             string = string[:CHAR_WIDTH]
         if not self.dry:
             self.p.text(f"{string}\n")
-        else:
-            print(string)
+        print(string)
 
     def cut(self):
         if not self.dry:
             self.p.cut()
-        else:
-            print("Cutting...")
+        print("Cutting...")

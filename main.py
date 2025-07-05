@@ -14,7 +14,7 @@ modules = []
 module_classes = [ModuleHeader, ModuleWeather, ModuleSeparator, ModuleTickTick]
 
 def main():
-    p = RecieptPrinter(False)
+    p = RecieptPrinter(True)
     config = configparser.ConfigParser()
     config.read('config.ini')
 
