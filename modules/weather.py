@@ -37,27 +37,50 @@ WMO_CODE = {
 
 class ModuleWeather:
     def __init__(self, config):
+        self.error_message = None
         
-        params = {
-        	"latitude": config['latitude'],
-            "longitude": config['longitude'],
-            "daily": ["temperature_2m_max", "temperature_2m_min", "weather_code"],
-            "timezone": "America/Los_Angeles",
-            "forecast_days": 1,
-            "temperature_unit": "fahrenheit"
-        }
-        response = requests.request("GET", API_GET_WEATHER, params=params)
-        day_json = response.json()['daily']
+        try:
+            # Check for required config keys
+            if 'latitude' not in config or 'longitude' not in config:
+                self.error_message = "Weather config missing latitude/longitude"
+                return
+            
+            params = {
+                "latitude": config['latitude'],
+                "longitude": config['longitude'],
+                "daily": ["temperature_2m_max", "temperature_2m_min", "weather_code"],
+                "timezone": config.get('timezone', 'America/Los_Angeles'),
+                "forecast_days": 1,
+                "temperature_unit": "fahrenheit"
+            }
+            
+            response = requests.request("GET", API_GET_WEATHER, params=params)
+            
+            if response.status_code != 200:
+                self.error_message = f"Weather API error: {response.status_code}"
+                return
+                
+            day_json = response.json()['daily']
 
-        self.day_temp_min = day_json['temperature_2m_min'][0]
-        self.day_temp_max = day_json['temperature_2m_max'][0]
-        self.day_weather_code = day_json['weather_code'][0]
+            self.day_temp_min = day_json['temperature_2m_min'][0]
+            self.day_temp_max = day_json['temperature_2m_max'][0]
+            self.day_weather_code = day_json['weather_code'][0]
+            
+        except KeyError as e:
+            self.error_message = f"Weather config missing key: {e}"
+        except requests.exceptions.RequestException as e:
+            self.error_message = f"Weather API request failed: {e}"
+        except Exception as e:
+            self.error_message = f"Weather data error: {e}"
 
     def reciept_print(self, p):
+        if self.error_message:
+            p.text(f"Weather data unavailable: {self.error_message}")
+            return
+            
         weather_string = f"{self.day_temp_max}°F/{self.day_temp_min}°F "
         if self.day_weather_code in WMO_CODE:
             weather_string += f"{WMO_CODE[self.day_weather_code]}"
         else:
-            p.text(f"Unknown WMO code: {self.day_weather_code}")
-            return
+            weather_string += f"Unknown weather code: {self.day_weather_code}"
         p.text(weather_string)

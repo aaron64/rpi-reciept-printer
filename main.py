@@ -3,15 +3,16 @@ from escpos.printer import Usb
 import configparser
 
 from modules.header import ModuleHeader
-from modules.ticktick import ModuleTickTick
+from modules.tasks import ModuleTickTick
 from modules.weather import ModuleWeather
 from modules.separator import ModuleSeparator
+from modules.events import ModuleEvents
 
 from RecieptPrinter import RecieptPrinter
 
 
 modules = []
-module_classes = [ModuleHeader, ModuleWeather, ModuleSeparator, ModuleTickTick]
+module_classes = [ModuleHeader, ModuleWeather, ModuleSeparator, ModuleEvents, ModuleTickTick]
 
 def main():
     p = RecieptPrinter(True)
