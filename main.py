@@ -6,13 +6,13 @@ from modules.header import ModuleHeader
 from modules.tasks import ModuleTickTick
 from modules.weather import ModuleWeather
 from modules.separator import ModuleSeparator
-from modules.events import ModuleEvents
+# from modules.events import ModuleEvents
 
 from RecieptPrinter import RecieptPrinter
 
 
 modules = []
-module_classes = [ModuleHeader, ModuleWeather, ModuleSeparator, ModuleEvents, ModuleTickTick]
+module_classes = [ModuleHeader, ModuleWeather, ModuleSeparator, ModuleTickTick]
 
 def main():
     p = RecieptPrinter(True)

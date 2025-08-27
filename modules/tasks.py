@@ -65,6 +65,11 @@ class ModuleTickTick:
                 if task.subtask_overrun:
                     p.text(f"        {task.subtask_overrun} more items...")
                 
+        # Add unfiled task placeholders for manual additions
+        p.text("")
+        for i in range(UNFILED_TASKS_COUNT):
+            p.text("    [ ] _________________________")
+        p.text("")
 
         reschedule_tasks = [task for project in self.projects for task in project.tasks_late(3)]
         if reschedule_tasks:
@@ -72,7 +77,3 @@ class ModuleTickTick:
             for reschedule_task in reschedule_tasks:
                 p.text(f"    - ({reschedule_task.delta_days} days) {reschedule_task.name}")
         
-        # Add unfiled task placeholders for manual additions
-        p.text("")
-        for i in range(UNFILED_TASKS_COUNT):
-            p.text("    [ ] _________________________")

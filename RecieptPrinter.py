@@ -2,14 +2,8 @@ from escpos.printer import Usb
 
 from typing import Optional
 import configparser
-from modules.header import ModuleHeader
-from modules.ticktick import ModuleTickTick
 
 CHAR_WIDTH = 42
-
-
-modules = []
-module_classes = [ModuleHeader, ModuleTickTick]
 
 class RecieptPrinter:
     def __init__(self, dry):
