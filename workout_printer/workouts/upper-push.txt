@@ -1,0 +1,33 @@
+Workout: LOWER + CORE
+Date: {{ date }}
+
+BENCH / DB PRESS            4 x 6-8
+ [ ] Set 1   Wt:______  Reps:____
+ [ ] Set 2   Wt:______  Reps:____
+ [ ] Set 3   Wt:______  Reps:____
+ [ ] Set 4   Wt:______  Reps:____
+
+OVERHEAD PRESS              3 x 8-10
+ [ ] Set 1   Wt:______  Reps:____
+ [ ] Set 2   Wt:______  Reps:____
+ [ ] Set 3   Wt:______  Reps:____
+
+INCLINE DB PRESS            3 x 10-12
+ [ ] Set 1   Wt:______  Reps:____
+ [ ] Set 2   Wt:______  Reps:____
+ [ ] Set 3   Wt:______  Reps:____
+
+TRICEP PUSHDOWN / DIPS      3 x 10-12
+ [ ] Set 1   Wt:______  Reps:____
+ [ ] Set 2   Wt:______  Reps:____
+ [ ] Set 3   Wt:______  Reps:____
+
+HANGING LEG RAISES          3 x 10-15
+ [ ] Set 1   Wt:______  Reps:____
+ [ ] Set 2   Wt:______  Reps:____
+ [ ] Set 3   Wt:______  Reps:____
+
+Notes:
+_______________________________________
+_______________________________________
+_______________________________________

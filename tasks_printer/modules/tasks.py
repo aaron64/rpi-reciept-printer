@@ -1,4 +1,4 @@
-from data_handlers.ticktick_api import TickTickAPI
+from ..data_handlers.ticktick_api import TickTickAPI
 
 SUBTASK_DISP_IF_COMPLETE = False
 SUBTASK_DISP_MAX = 5

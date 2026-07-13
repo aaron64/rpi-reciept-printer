@@ -1,0 +1,33 @@
+Workout: LOWER + CORE
+Date: {{ date }}
+
+PULL-UPS / LAT PULLDOWN     4 x 6-10
+ [ ] Set 1   Wt:______  Reps:____
+ [ ] Set 2   Wt:______  Reps:____
+ [ ] Set 3   Wt:______  Reps:____
+ [ ] Set 4   Wt:______  Reps:____
+
+BARBELL / DB ROWS           3 x 8-10
+ [ ] Set 1   Wt:______  Reps:____
+ [ ] Set 2   Wt:______  Reps:____
+ [ ] Set 3   Wt:______  Reps:____
+
+BICEP CURLS                 3 x 10-12
+ [ ] Set 1   Wt:______  Reps:____
+ [ ] Set 2   Wt:______  Reps:____
+ [ ] Set 3   Wt:______  Reps:____
+
+HAMMER CURLS                3 x 10-12
+ [ ] Set 1   Wt:______  Reps:____
+ [ ] Set 2   Wt:______  Reps:____
+ [ ] Set 3   Wt:______  Reps:____
+
+FACE PULLS                  3 x 12-15
+ [ ] Set 1   Wt:______  Reps:____
+ [ ] Set 2   Wt:______  Reps:____
+ [ ] Set 3   Wt:______  Reps:____
+
+Notes:
+_______________________________________
+_______________________________________
+_______________________________________

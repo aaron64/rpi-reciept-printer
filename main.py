@@ -1,34 +1,19 @@
-from escpos.printer import Usb
+from tasks_printer.printer import run as print_todays_tasks
+from workout_printer.printer import print_workout
 
-import configparser
+WORKOUT_TASK_PREFIX = "Workout - "
 
-from modules.header import ModuleHeader
-from modules.tasks import ModuleTickTick
-from modules.weather import ModuleWeather
-from modules.separator import ModuleSeparator
-# from modules.events import ModuleEvents
-
-from RecieptPrinter import RecieptPrinter
-
-
-modules = []
-module_classes = [ModuleHeader, ModuleWeather, ModuleSeparator, ModuleTickTick]
 
 def main():
-    p = RecieptPrinter(True)
-    config = configparser.ConfigParser()
-    config.read('config.ini')
+    todays_tasks = print_todays_tasks(dry=False)
 
-    print("Creating modules...")
-    for ModuleClass in module_classes:
-        module_config = config[ModuleClass.__name__] if ModuleClass.__name__ in config else {}
-        modules.append(ModuleClass(module_config))
+    for task in todays_tasks:
+        if not task.name.startswith(WORKOUT_TASK_PREFIX):
+            continue
+        workout_name = task.name[len(WORKOUT_TASK_PREFIX):].strip()
+        if not print_workout(workout_name, dry=False):
+            print(f"Unknown workout '{workout_name}' referenced by task '{task.name}'")
 
-    print("Printing...")
-    for module in modules:
-        module.reciept_print(p)
-
-    p.cut()
 
 if __name__ == "__main__":
     main()
