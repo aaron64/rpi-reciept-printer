@@ -1,9 +1,3 @@
-import requests
-import json
-from datetime import datetime, timezone
-
-API_GET_WEATHER = "https://api.open-meteo.com/v1/forecast" 
-
 WMO_CODE = {
     0: "Clear sky",
     1: "Mainly clear",
@@ -35,52 +29,20 @@ WMO_CODE = {
     99: "Thunderstorm with heavy hail"
 }
 
+
 class ModuleWeather:
     def __init__(self, config):
-        self.error_message = None
-        
-        try:
-            # Check for required config keys
-            if 'latitude' not in config or 'longitude' not in config:
-                self.error_message = "Weather config missing latitude/longitude"
-                return
-            
-            params = {
-                "latitude": config['latitude'],
-                "longitude": config['longitude'],
-                "daily": ["temperature_2m_max", "temperature_2m_min", "weather_code"],
-                "timezone": config.get('timezone', 'America/Los_Angeles'),
-                "forecast_days": 1,
-                "temperature_unit": "fahrenheit"
-            }
-            
-            response = requests.request("GET", API_GET_WEATHER, params=params)
-            
-            if response.status_code != 200:
-                self.error_message = f"Weather API error: {response.status_code}"
-                return
-                
-            day_json = response.json()['daily']
+        pass
 
-            self.day_temp_min = day_json['temperature_2m_min'][0]
-            self.day_temp_max = day_json['temperature_2m_max'][0]
-            self.day_weather_code = day_json['weather_code'][0]
-            
-        except KeyError as e:
-            self.error_message = f"Weather config missing key: {e}"
-        except requests.exceptions.RequestException as e:
-            self.error_message = f"Weather API request failed: {e}"
-        except Exception as e:
-            self.error_message = f"Weather data error: {e}"
-
-    def reciept_print(self, p):
-        if self.error_message:
-            p.text(f"Weather data unavailable: {self.error_message}")
+    def render(self, p, context):
+        if context.weather_error:
+            p.text(f"Weather data unavailable: {context.weather_error}")
             return
-            
-        weather_string = f"{self.day_temp_max}°F/{self.day_temp_min}°F "
-        if self.day_weather_code in WMO_CODE:
-            weather_string += f"{WMO_CODE[self.day_weather_code]}"
+
+        weather = context.weather
+        weather_string = f"{weather.day_temp_max}°F/{weather.day_temp_min}°F "
+        if weather.day_weather_code in WMO_CODE:
+            weather_string += f"{WMO_CODE[weather.day_weather_code]}"
         else:
-            weather_string += f"Unknown weather code: {self.day_weather_code}"
+            weather_string += f"Unknown weather code: {weather.day_weather_code}"
         p.text(weather_string)

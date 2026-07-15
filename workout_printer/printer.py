@@ -3,8 +3,6 @@ from pathlib import Path
 
 from jinja2 import Template
 
-from RecieptPrinter import RecieptPrinter
-
 WORKOUTS_DIR = Path(__file__).parent / "workouts"
 
 
@@ -19,19 +17,13 @@ def list_workouts():
     return sorted(p.stem for p in WORKOUTS_DIR.glob("*.txt"))
 
 
-def print_workout(name, dry=False):
+def render_workout(name):
     workout_path = WORKOUTS_DIR / f"{name}.txt"
     if not workout_path.exists():
-        return False
+        return None
 
     today = datetime.today()
     date_str = f"{today.strftime('%B')} {get_day_with_suffix(today.day)} {today.year}"
 
     template = Template(workout_path.read_text())
-    rendered = template.render(date=date_str)
-
-    p = RecieptPrinter(dry)
-    for line in rendered.splitlines():
-        p.text(line)
-    p.cut()
-    return True
+    return template.render(date=date_str)

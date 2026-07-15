@@ -1,18 +1,17 @@
-from tasks_printer.printer import run as print_todays_tasks
-from workout_printer.printer import print_workout
+import configparser
 
-WORKOUT_TASK_PREFIX = "Workout - "
+from RecieptPrinter import RecieptPrinter
+from tasks_printer.context import build_context
+from tasks_printer.printer import render_receipt
 
 
 def main():
-    todays_tasks = print_todays_tasks(dry=False)
+    config = configparser.ConfigParser()
+    config.read("config.ini")
 
-    for task in todays_tasks:
-        if not task.name.startswith(WORKOUT_TASK_PREFIX):
-            continue
-        workout_name = task.name[len(WORKOUT_TASK_PREFIX):].strip()
-        if not print_workout(workout_name, dry=False):
-            print(f"Unknown workout '{workout_name}' referenced by task '{task.name}'")
+    context = build_context(config)
+    p = RecieptPrinter(dry=False)
+    render_receipt(p, context, config)
 
 
 if __name__ == "__main__":
