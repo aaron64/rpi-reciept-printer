@@ -11,7 +11,7 @@ def main():
     parser.add_argument("--dry", action="store_true", help="Print to console only, skip the physical printer")
     args = parser.parse_args()
 
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(interpolation=None)
     config.read("config.ini")
 
     context = build_context(config)
