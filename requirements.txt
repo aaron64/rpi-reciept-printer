@@ -3,3 +3,4 @@ emoji
 jinja2
 python-escpos
 pyusb
+recurring-ical-events

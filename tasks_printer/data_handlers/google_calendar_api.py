@@ -86,7 +86,7 @@ class GoogleCalendarAPI:
                         start_time = datetime.now(timezone.utc)
                         is_all_day = False
                     
-                    event = Event(name, start_time, is_all_day)
+                    event = Event(name, start_time, is_all_day=is_all_day)
                     events.append(event)
                 except Exception as e:
                     print(f"Error parsing Google event: {e}")

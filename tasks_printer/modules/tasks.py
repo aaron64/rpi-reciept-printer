@@ -1,6 +1,10 @@
+import random
+
 TASK_DISP_LATE_WITHIN_DAYS = 3
 
 UNFILED_TASKS_COUNT = 3
+
+RESCHEDULE_TASKS_COUNT = 5
 
 
 class ModuleTickTick:
@@ -49,8 +53,9 @@ class ModuleTickTick:
 
         reschedule_tasks = [task for project in context.projects for task in project.tasks_late(3)]
         if reschedule_tasks:
+            sample = random.sample(reschedule_tasks, min(RESCHEDULE_TASKS_COUNT, len(reschedule_tasks)))
             p.text("Reschedule tasks:")
-            for reschedule_task in reschedule_tasks:
+            for reschedule_task in sample:
                 p.text(f"    - ({reschedule_task.delta_days} days) {reschedule_task.name}")
 
         p.cut()

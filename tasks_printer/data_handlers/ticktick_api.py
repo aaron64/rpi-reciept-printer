@@ -74,16 +74,24 @@ class TickTickAPI:
         for task_json in tasks:
             try:
                 name = task_json['title']
-                
-                if 'dueDate' in task_json:
+                is_all_day = task_json.get('isAllDay', False)
+
+                if 'startDate' in task_json:
+                    start_time = datetime.strptime(task_json['startDate'], "%Y-%m-%dT%H:%M:%S.%f%z")
+                elif 'dueDate' in task_json:
                     start_time = datetime.strptime(task_json['dueDate'], "%Y-%m-%dT%H:%M:%S.%f%z")
                 else:
-                    # If no due date, assume it's for today
+                    # If no start/due date, assume it's for today
                     start_time = datetime.now(timezone.utc)
-                
+
+                if 'dueDate' in task_json:
+                    end_time = datetime.strptime(task_json['dueDate'], "%Y-%m-%dT%H:%M:%S.%f%z")
+                else:
+                    end_time = start_time
+
                 # Only include events within the time range
                 if now <= start_time <= time_max:
-                    event = Event(name, start_time, is_all_day=True)
+                    event = Event(name, start_time, end_time=end_time, is_all_day=is_all_day)
                     events.append(event)
             except Exception as e:
                 print(f"Error parsing TickTick event: {e}")
