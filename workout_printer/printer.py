@@ -6,7 +6,7 @@ from jinja2 import Environment, FileSystemLoader
 WORKOUTS_DIR = Path(__file__).parent / "workouts"
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 
-WORKOUT_TASK_PREFIX = "Workout - "
+WORKOUT_TASK_PREFIX = "Workout: "
 
 env = Environment(
     loader=FileSystemLoader([str(WORKOUTS_DIR), str(TEMPLATES_DIR)]),
