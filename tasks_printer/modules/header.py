@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from ..jinja_env import env
+
 
 def get_day_with_suffix(day):
     if 11 <= day <= 13:
@@ -14,6 +16,11 @@ class ModuleHeader:
 
     def render(self, p, context):
         today = datetime.today()
+        rendered = env.get_template("header.jinja").render(
+            month=today.strftime('%B'),
+            day_with_suffix=get_day_with_suffix(today.day),
+            year=today.year,
+        ).rstrip("\n")
         p.set(bold=True, double_width=True, double_height=True)
-        p.text(f"{today.strftime('%B')} {get_day_with_suffix(today.day)} {today.year}\n")
+        p.text(f"{rendered}\n")
         p.set_with_default()

@@ -1,6 +1,7 @@
-Workout: LOWER + CORE
-Date: {{ date }}
-
+{% extends "base.jinja" %}
+{% set day_number = 1 %}
+{% set title = "UPPER (PUSH)" %}
+{% block body %}
 BENCH / DB PRESS            4 x 6-8
  [ ] Set 1   Wt:______  Reps:____
  [ ] Set 2   Wt:______  Reps:____
@@ -26,8 +27,4 @@ HANGING LEG RAISES          3 x 10-15
  [ ] Set 1   Wt:______  Reps:____
  [ ] Set 2   Wt:______  Reps:____
  [ ] Set 3   Wt:______  Reps:____
-
-Notes:
-_______________________________________
-_______________________________________
-_______________________________________
+{% endblock %}

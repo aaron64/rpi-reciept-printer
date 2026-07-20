@@ -1,0 +1,5 @@
+{% if error %}
+Weather data unavailable: {{ error }}
+{% else %}
+{{ temp_max }}°F/{{ temp_min }}°F {{ description }}
+{% endif %}

@@ -3,9 +3,8 @@ from .modules.tasks import ModuleTickTick
 from .modules.weather import ModuleWeather
 from .modules.schedule import ModuleSchedule
 from .modules.separator import ModuleSeparator
-from .modules.workout import ModuleWorkout
 
-module_classes = [ModuleHeader, ModuleWeather, ModuleSchedule, ModuleSeparator, ModuleTickTick, ModuleWorkout]
+module_classes = [ModuleHeader, ModuleWeather, ModuleSchedule, ModuleSeparator, ModuleTickTick]
 
 
 def render_receipt(p, context, config):

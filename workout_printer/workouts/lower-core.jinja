@@ -1,8 +1,7 @@
-========================================
-   DAY 2 - LOWER + CORE
-   Date: {{ date }}
-========================================
-
+{% extends "base.jinja" %}
+{% set day_number = 2 %}
+{% set title = "LOWER + CORE" %}
+{% block body %}
 SQUATS                      4 x 6-8
  [ ] Set 1   Wt:______  Reps:____
  [ ] Set 2   Wt:______  Reps:____
@@ -28,7 +27,4 @@ PALLOF PRESS                3 x 10/side
  [ ] Set 1   Wt:______  Reps:____
  [ ] Set 2   Wt:______  Reps:____
  [ ] Set 3   Wt:______  Reps:____
-
-========================================
- Beat last week: +weight or +reps
-========================================
+{% endblock %}

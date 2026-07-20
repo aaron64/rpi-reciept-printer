@@ -1,6 +1,7 @@
-Workout: LOWER + CORE
-Date: {{ date }}
-
+{% extends "base.jinja" %}
+{% set day_number = 3 %}
+{% set title = "UPPER (PULL)" %}
+{% block body %}
 PULL-UPS / LAT PULLDOWN     4 x 6-10
  [ ] Set 1   Wt:______  Reps:____
  [ ] Set 2   Wt:______  Reps:____
@@ -26,8 +27,4 @@ FACE PULLS                  3 x 12-15
  [ ] Set 1   Wt:______  Reps:____
  [ ] Set 2   Wt:______  Reps:____
  [ ] Set 3   Wt:______  Reps:____
-
-Notes:
-_______________________________________
-_______________________________________
-_______________________________________
+{% endblock %}

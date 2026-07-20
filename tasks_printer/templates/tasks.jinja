@@ -1,0 +1,40 @@
+{% if error %}
+Tasks unavailable: {{ error }}
+{% else %}
+{% for project in projects %}
+{% set tasks_today = project.tasks_today() %}
+{% set tasks_due = project.tasks_due_within_days(late_within_days) %}
+{% if tasks_today or tasks_due %}
+{{ project.name }}:
+{% for task in tasks_today %}
+    [ ] {{ task.name }}
+{% for subtask in task.subtasks %}
+        [{{ 'X' if subtask.complete else ' ' }}] {{ subtask.name }}
+{% endfor %}
+{% if task.subtask_overrun %}
+        {{ task.subtask_overrun }} more items...
+{% endif %}
+{% endfor %}
+{% for task in tasks_due %}
+    [ ] ({{ task.delta_days }} {{ 'day' if task.delta_days == -1 else 'days' }}) {{ task.name }}
+{% for subtask in task.subtasks %}
+        [{{ 'X' if subtask.complete else ' ' }}] {{ subtask.name }}
+{% endfor %}
+{% if task.subtask_overrun %}
+        {{ task.subtask_overrun }} more items...
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+{% for _ in range(unfiled_tasks_count) %}
+    [ ] _________________________
+{% endfor %}
+
+{% if reschedule_sample %}
+Reschedule tasks:
+{% for task in reschedule_sample %}
+    - ({{ task.delta_days }} days) {{ task.name }}
+{% endfor %}
+{% endif %}
+{% endif %}

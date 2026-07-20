@@ -4,6 +4,7 @@ import configparser
 from RecieptPrinter import RecieptPrinter
 from tasks_printer.context import build_context
 from tasks_printer.printer import render_receipt
+from workout_printer.printer import print_workouts
 
 
 def main():
@@ -17,6 +18,7 @@ def main():
     context = build_context(config)
     p = RecieptPrinter(dry=args.dry)
     render_receipt(p, context, config)
+    print_workouts(p, context)
 
 
 if __name__ == "__main__":

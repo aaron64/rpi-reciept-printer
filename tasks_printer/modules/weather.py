@@ -1,3 +1,5 @@
+from ..jinja_env import env
+
 WMO_CODE = {
     0: "Clear sky",
     1: "Mainly clear",
@@ -35,14 +37,15 @@ class ModuleWeather:
         pass
 
     def render(self, p, context):
-        if context.weather_error:
-            p.text(f"Weather data unavailable: {context.weather_error}")
-            return
-
         weather = context.weather
-        weather_string = f"{weather.day_temp_max}°F/{weather.day_temp_min}°F "
-        if weather.day_weather_code in WMO_CODE:
-            weather_string += f"{WMO_CODE[weather.day_weather_code]}"
-        else:
-            weather_string += f"Unknown weather code: {weather.day_weather_code}"
-        p.text(weather_string)
+        description = None
+        if weather:
+            description = WMO_CODE.get(weather.day_weather_code, f"Unknown weather code: {weather.day_weather_code}")
+
+        rendered = env.get_template("weather.jinja").render(
+            error=context.weather_error,
+            temp_max=weather.day_temp_max if weather else None,
+            temp_min=weather.day_temp_min if weather else None,
+            description=description,
+        ).rstrip("\n")
+        p.text(rendered)
