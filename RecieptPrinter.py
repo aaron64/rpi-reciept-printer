@@ -68,3 +68,8 @@ class RecieptPrinter:
         if not self.dry:
             self.p.cut()
         print("Cutting...")
+
+    def image(self, img_source, **kwargs):
+        if not self.dry:
+            self.p.image(img_source, **kwargs)
+        print(f"[image: {img_source}]")
