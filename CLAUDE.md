@@ -6,17 +6,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A Raspberry Pi controlled ESC/POS thermal receipt printer (USB vendor/product `0x04b8`/`0x0202`, driven via `python-escpos`). `main.py` prints a daily task/weather receipt, and — as part of that same module pipeline — prints a matching workout sheet from `workout_printer/workouts/` for any task named `"Workout - <name>"` due today.
 
+Separately, `takeout_box_server.py` runs a small always-on Flask server that prints Takeout Box order receipts on demand, triggered by an incoming HTTP request rather than cron — see the `takeout_box_printer` section below.
+
 ## Commands
 
 ```bash
 ./setup.sh              # one-time: adds pi user to dialout/lp groups, creates venv, installs requirements.txt
 ./bin/pip install -r requirements.txt   # after adding a dependency
 ./bin/python3 main.py    # run for real (prints to the physical USB printer)
+./bin/python3 takeout_box_server.py   # run the order webhook server for real
 ```
 
-There is no test suite, linter, or build step configured in this repo.
+There is no linter or build step configured in this repo. `tests/` holds a couple of plain dry-run scripts (no pytest) — run directly, e.g. `python3 tests/test_takeout_box_order.py`.
 
-`run.sh` is the production entrypoint invoked by cron/systemd on the Pi: it `cd`s to `/home/pi/receipt-printer` and logs stdout/stderr to `/home/pi/logs/<date>/reciept.log`.
+`run.sh` is the production entrypoint invoked by cron/systemd on the Pi for the daily receipt: it `cd`s to `/home/pi/receipt-printer` and logs stdout/stderr to `/home/pi/logs/<date>/reciept.log`. `run_takeout_box_server.sh` is the equivalent long-running entrypoint for the order webhook server (see `takeout-box.service.example` for the systemd unit that keeps it running).
 
 `RecieptPrinter` takes a `dry` flag (`RecieptPrinter(dry=True)`) that skips the real USB printer and just echoes to stdout — use this when iterating locally without hardware attached. `main.py` always runs with `dry=False`; for local testing, instantiate `RecieptPrinter(dry=True)` directly and pass it to `render_receipt()`.
 
@@ -38,6 +41,12 @@ There is no test suite, linter, or build step configured in this repo.
 
 **`reciept_util.filter_emojis`** strips emoji from any user-generated text (task/event titles) before printing, since the thermal printer can't render them — used throughout `data_handlers` and `models.py` whenever a `Task`/`Event`/`TickTickTask` name is constructed.
 
+**`takeout_box_printer`** is a standalone order-receipt renderer for the Takeout Box hardware product, structurally like `workout_printer` (no server/hardware concerns baked in) but triggered live instead of on a daily cycle:
+- `models.py` — `Order`/`OrderItem` parse and validate an incoming order dict (`order_number`, `order_name`, `items[]` each with `name`, `color` ∈ `COLORS`, `handedness` ∈ `HANDEDNESS_OPTIONS`); invalid input raises `OrderValidationError`. Each item gets a random funny food note (one of `NOTE_ADJECTIVES` + one of `NOTE_FOODS`, e.g. "extra kimchi") assigned in `OrderItem.__init__` — the note is never accepted from the caller.
+- `printer.py` — `render_order(p, order)` prints `res/rally-audio-header.bmp`, the order number/name, each item with its color/handedness/note, then `res/qr.bmp`, and cuts. Both bmp paths are optional (skipped via `.exists()` check) — the QR asset isn't checked in yet; drop `qr.bmp` into `takeout_box_printer/res/` to enable it.
+- `server.py` — `create_app(p, auth_token)` builds the Flask app with a single `POST /orders` route: requires `Authorization: Bearer <auth_token>` (constant-time compare), validates the JSON body via `Order.from_dict`, and renders under a lock (one physical printer, serialize concurrent requests) via the shared `RecieptPrinter` instance passed in at startup.
+- `takeout_box_server.py` (repo root) is the entrypoint: loads `config.ini`'s `[TakeoutBoxServer]` section for `host`/`port`/`auth_token`, builds one `RecieptPrinter(dry=...)`, and calls `app.run()`. It never touches `tasks_printer`/`workout_printer` — a fully separate pipeline from the daily cron flow.
+
 ## Config
 
-`config.ini` (gitignored, not present in repo) provides per-module settings keyed by class name, e.g. `[ModuleTickTick] bearer_token=...`, `[ModuleWeather] latitude=... longitude=... timezone=...`, `[ModuleSeparator] pattern=...`. A module with missing required config sets its own `error_message` and degrades gracefully rather than crashing the whole run.
+`config.ini` (gitignored, not present in repo) provides per-module settings keyed by class name, e.g. `[ModuleTickTick] bearer_token=...`, `[ModuleWeather] latitude=... longitude=... timezone=...`, `[ModuleSeparator] pattern=...`, plus `[TakeoutBoxServer] auth_token=... host=... port=...` for the order webhook server. A module with missing required config sets its own `error_message` and degrades gracefully rather than crashing the whole run.

@@ -1,0 +1,18 @@
+# Example systemd unit for the Takeout Box order webhook server.
+# Copy to /etc/systemd/system/takeout-box.service on the Pi, then:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now takeout-box.service
+
+[Unit]
+Description=Takeout Box order receipt printer
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/receipt-printer
+ExecStart=/home/pi/receipt-printer/run_takeout_box_server.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

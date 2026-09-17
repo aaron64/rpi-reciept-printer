@@ -32,3 +32,13 @@ end_hour = 23
 [ModuleSeparator]
 # Optional, defaults to "-"
 pattern = -
+
+[TakeoutBoxServer]
+# Shared-secret required as "Authorization: Bearer <token>" on incoming
+# order requests to takeout_box_server.py. Keep this secret -- anyone who
+# has it can trigger a physical print.
+auth_token = your-shared-secret-token
+
+# Optional, defaults shown
+host = 0.0.0.0
+port = 8080

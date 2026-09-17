@@ -1,5 +1,6 @@
 requests
 emoji
+flask
 jinja2
 python-escpos
 pyusb
