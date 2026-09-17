@@ -27,9 +27,9 @@ def render_order(p, order):
         p.set(bold=True)
         p.text(f"{i}) {filter_emojis(item.name)}")
         p.set_with_default()
-        p.text(f"   Color: {item.color.capitalize()}")
-        p.text(f"   Handedness: {item.handedness.capitalize()}")
-        p.text(f'   "{item.note.capitalize()}"')
+        p.text(f"   - Color: {item.color.capitalize()}")
+        p.text(f"   - Handedness: {item.handedness.capitalize()}")
+        p.text(f'   - {item.note.capitalize()}')
 
         if i < len(order.items):
             p.text(SEPARATOR)
